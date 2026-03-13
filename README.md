@@ -83,4 +83,4 @@ Please keep PRs small and focused, and follow the existing style.
 
 ## 📄 License
 
-This project is unlicensed (public domain) unless otherwise stated.
+This project is licensed under the **MIT License**. See [LICENSE](./LICENSE) for details.
