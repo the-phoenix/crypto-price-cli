@@ -6,8 +6,8 @@ A lightweight Rust CLI that fetches and prints cryptocurrency prices (USD) using
 
 - Fetches current price for a list of symbols (defaults to BTC / ETH / SOL)
 - Supports custom coin lists via CLI args
-- Prints prices in a single line (e.g., `BTC: $71308.00⬈ | ETH: $2109.80⬆ | SOL: $88.95⬊`)
-- Shows 24h price change indicators (gradual: ⬈/⬊, rapid: ⬆/⬇) based on configurable threshold (default 5%)
+- Prints prices in a single line (e.g., `BTC: $71308.00 📈 | ETH: $2109.80 🚀 | SOL: $88.95 📉`)
+- Shows 24h price change indicators (gradual: 📈/📉, rapid: 🚀/💔) based on configurable threshold (default 2.5%)
 - Supports CoinGecko **Pro** API keys via `--pro` and `--api-key`
 - Loads `.env` for optional key configuration
 - Modular, testable design with unit tests
@@ -82,8 +82,17 @@ cargo run --quiet -- --pro --api-key your_key --indicator-threshold 2 bitcoin et
 
 - `src/main.rs` – CLI entry point (minimal logic)
 - `src/lib.rs` – core logic and helpers (parsing, URL building, JSON extraction, formatting)
+- `run()` in `src/lib.rs` is the single high-level workflow used by `main.rs`
 - Unit tests are located inside `src/lib.rs`
 
+## 🔧 Indicator behavior note
+
+- Up/down indicators are set in `Indicator::as_str()` in `src/lib.rs`:
+  - gradual up: `📈`
+  - rapid up: `🚀`
+  - gradual down: `📉`
+  - rapid down: `💔`
+- Default threshold for rapid/gradual is `--indicator-threshold 2.5` (or configured via CLI).
 ## 🧪 Run Tests
 
 ```bash
@@ -92,15 +101,15 @@ cargo test
 
 ## 🤝 Contributing
 
-Contributions are welcome!
+This repository is maintained as a personal productivity project and is designed to improve local shell workflows (e.g., zsh). You are welcome to fork the codebase, adapt it to your own requirements, and submit pull requests for enhancements that would make this tool more useful for the community.
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/your-feature`)
-3. Make changes and add tests
-4. Run tests: `cargo test`
+3. Implement changes and add tests
+4. Execute tests: `cargo test`
 5. Open a pull request
 
-Please keep PRs small and focused, and follow the existing style.
+Please keep PRs focused, well-scoped, and consistent with the existing coding style.
 
 ## 📄 License
 

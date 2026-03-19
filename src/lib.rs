@@ -18,10 +18,11 @@ enum Indicator {
 impl Indicator {
     fn as_str(&self) -> &'static str {
         match self {
-            Indicator::GradualUp => " ⬈",
-            Indicator::RapidUp => " ⬆",
-            Indicator::GradualDown => " ⬊",
-            Indicator::RapidDown => " ⬇",
+            // For those dislike emojis: ⬈, ⬆, ⬊, ⬇
+            Indicator::GradualUp => " 📈",
+            Indicator::RapidUp => " 🚀",
+            Indicator::GradualDown => " 📉",
+            Indicator::RapidDown => " 💔",
             Indicator::None => "",
         }
     }
@@ -287,9 +288,9 @@ mod tests {
         ];
 
         let out = format_prices(&prices, true, 5.0);
-        assert!(out.contains("BTC: $1.00 ⬈"));
-        assert!(out.contains("ETH: $1.00 ⬆"));
-        assert!(out.contains("SOL: $1.00 ⬊"));
-        assert!(out.contains("DOG: $1.00 ⬇"));
+        assert!(out.contains("BTC: $1.00 📈"));
+        assert!(out.contains("ETH: $1.00 🚀"));
+        assert!(out.contains("SOL: $1.00 📉"));
+        assert!(out.contains("DOG: $1.00 💔"));
     }
 }
