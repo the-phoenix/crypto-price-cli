@@ -1,7 +1,7 @@
 use clap::Parser;
 use dotenvy::dotenv;
 
-use crypto_price_cli::{build_price_url, extract_prices, format_prices, Config};
+use crypto_price_cli::{run, Config};
 
 #[derive(Debug, Parser)]
 #[command(author, version, about, long_about = None)]
@@ -30,40 +30,24 @@ struct CliArgs {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok();
 
-    let CliArgs = CliArgs::parse();
+    let args = CliArgs::parse();
 
-    let coins = if CliArgs.coins.is_empty() {
+    let coins = if args.coins.is_empty() {
         vec!["bitcoin".to_string(), "ethereum".to_string(), "solana".to_string()]
     } else {
-        CliArgs.coins
+        args.coins
     };
 
     let cfg = Config {
         coins,
-        api_key: CliArgs.api_key,
-        use_pro: CliArgs.pro,
-        show_indicator: !CliArgs.no_indicator,
-        indicator_threshold_percent: CliArgs.indicator_threshold,
+        api_key: args.api_key,
+        use_pro: args.pro,
+        show_indicator: !args.no_indicator,
+        indicator_threshold_percent: args.indicator_threshold,
     };
 
-    let url = build_price_url(&cfg)?;
-
-    let client = reqwest::Client::builder()
-        .user_agent("crypto-price-cli/0.1 (+https://github.com/the-phoenix/crypto-price-cli)")
-        .build()?;
-
-    let raw = client.get(url).send().await?.text().await?;
-    let resp = serde_json::from_str(&raw)?;
-
-    let prices = extract_prices(&resp, &cfg.coins);
-    if prices.iter().any(|(_, p, _)| p.is_none()) {
-        eprintln!("raw API response: {raw}");
-    }
-
-    println!(
-        "{}",
-        format_prices(&prices, cfg.show_indicator, cfg.indicator_threshold_percent)
-    );
+    let output = run(&cfg).await?;
+    println!("{output}");
 
     Ok(())
 }

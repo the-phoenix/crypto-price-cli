@@ -187,6 +187,29 @@ pub fn format_prices(
         .join(" | ")
 }
 
+/// Run the full fetch+format flow from config.
+pub async fn run(config: &Config) -> Result<String, Box<dyn std::error::Error>> {
+    let url = build_price_url(config)?;
+
+    let client = reqwest::Client::builder()
+        .user_agent("crypto-price-cli/0.1 (+https://github.com/the-phoenix/crypto-price-cli)")
+        .build()?;
+
+    let raw = client.get(url).send().await?.text().await?;
+    let resp = serde_json::from_str(&raw)?;
+
+    let prices = extract_prices(&resp, &config.coins);
+    if prices.iter().any(|(_, p, _)| p.is_none()) {
+        eprintln!("raw API response: {raw}");
+    }
+
+    Ok(format_prices(
+        &prices,
+        config.show_indicator,
+        config.indicator_threshold_percent,
+    ))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
