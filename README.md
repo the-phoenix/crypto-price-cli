@@ -101,7 +101,7 @@ cargo test
 
 ## 🤝 Contributing
 
-This repository is maintained as a personal productivity project and is designed to improve local shell workflows (e.g., zsh). You are welcome to fork the codebase, adapt it to your own requirements, and submit pull requests for enhancements that would make this tool more useful for the community.
+This repository is maintained as a personal productivity project and is designed to improve local shell workflows (e.g., zsh). You are welcome to fork the codebase, adapt it to your own requirements, and submit PRs for enhancements that would make this tool more useful for the community.
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/your-feature`)
