@@ -6,7 +6,8 @@ A lightweight Rust CLI that fetches and prints cryptocurrency prices (USD) using
 
 - Fetches current price for a list of symbols (defaults to BTC / ETH / SOL)
 - Supports custom coin lists via CLI args
-- Prints prices in a single line (e.g., `BTC: $71308.00 | ETH: $2109.80 | SOL: $88.95`)
+- Prints prices in a single line (e.g., `BTC: $71308.00⬈ | ETH: $2109.80⬆ | SOL: $88.95⬊`)
+- Shows 24h price change indicators (gradual: ⬈/⬊, rapid: ⬆/⬇) based on configurable threshold (default 5%)
 - Supports CoinGecko **Pro** API keys via `--pro` and `--api-key`
 - Loads `.env` for optional key configuration
 - Modular, testable design with unit tests
@@ -25,16 +26,30 @@ cargo build --release
 
 ### Run
 
-Default coins (BTC / ETH / SOL):
+Default coins (BTC / ETH / SOL) with indicators:
 
 ```bash
 cargo run --quiet
+# Output: BTC: $71308.00⬈ | ETH: $2109.80⬆ | SOL: $88.95⬊
 ```
 
 Custom coins:
 
 ```bash
 cargo run --quiet -- bitcoin solana
+```
+
+Disable indicators:
+
+```bash
+cargo run --quiet -- --no-indicator
+# Output: BTC: $71308.00 | ETH: $2109.80 | SOL: $88.95
+```
+
+Set custom indicator threshold (e.g., 3% instead of default 5%):
+
+```bash
+cargo run --quiet -- --indicator-threshold 3
 ```
 
 ### Pro API key (optional)
@@ -55,6 +70,12 @@ Or pass the key directly:
 
 ```bash
 cargo run --quiet -- --pro --api-key your_pro_api_key_here bitcoin solana
+```
+
+All flags can be combined:
+
+```bash
+cargo run --quiet -- --pro --api-key your_key --indicator-threshold 2 bitcoin ethereum
 ```
 
 ## 🧩 Code Structure
